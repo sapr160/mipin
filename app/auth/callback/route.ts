@@ -10,10 +10,17 @@ import {
 /**
  * The single post-auth handler for both sign-in methods (spec #29 / issue #31):
  * Google OAuth and the email magic link both land here with a PKCE `code`. It
- * exchanges the code for a cookie session, then owns the one routing decision —
- * a user with no profile goes to onboarding, everyone else into the app. (The
- * age-wall branch and the real profile lookup arrive with cluster 3.3; until
- * then `hasProfile` reports false, so every fresh sign-in reaches onboarding.)
+ * exchanges the code for a cookie session, then owns the one post-auth routing
+ * decision: an account with a profile goes into the app, everyone else to
+ * onboarding.
+ *
+ * That routing honours the Age wall (issue #32) without a branch here: a walled
+ * account has no profile, so it lands on onboarding — where the onboarding layout
+ * renders the wall from the account's rejection row. The layout is the single
+ * owner of wall-vs-form, so it can't be walked around by a deep link, and the
+ * callback needs only to route profile-less accounts there. (`hasProfile` still
+ * reports false for everyone until the profile-table ticket, so every fresh
+ * sign-in reaches onboarding for now.)
  *
  * A missing or unusable code bounces back to the sign-in page rather than
  * erroring, so a stale or tampered link is a soft failure, not a 500.
