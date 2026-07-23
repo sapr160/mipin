@@ -9,7 +9,8 @@ const LEGAL = [
 
 /**
  * The Shell footer: the name-only non-affiliation line (zero official marks),
- * placeholder links to the three legal pages, and a Ko-fi tip-jar link that
+ * links to the three legal pages (`/terminos`, `/privacidad`,
+ * `/encuentros-seguros`, wired up in issue #23), and a Ko-fi tip-jar link that
  * renders only when `KOFI_URL` is set. The env is read at request time — the
  * app is dynamic (cookie-based locale), so the same build serves both states.
  */

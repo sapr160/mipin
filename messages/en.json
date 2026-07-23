@@ -36,5 +36,10 @@
     "privacy": "Privacy",
     "safety": "Safe meetups",
     "kofi": "Buy me a coffee"
+  },
+  "Legal": {
+    "termsTitle": "Terms of Service",
+    "privacyTitle": "Privacy Policy",
+    "safetyTitle": "Safe meetups"
   }
 }

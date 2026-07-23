@@ -36,5 +36,10 @@
     "privacy": "Privacidad",
     "safety": "Encuentros seguros",
     "kofi": "Invítame un café"
+  },
+  "Legal": {
+    "termsTitle": "Términos de servicio",
+    "privacyTitle": "Política de privacidad",
+    "safetyTitle": "Encuentros seguros"
   }
 }
