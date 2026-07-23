@@ -20,6 +20,34 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Database migrations
+
+Schema lives as checked-in SQL in `supabase/migrations/`, applied directly to
+the **two hosted Supabase projects** — `mipin-test` (dev/e2e) and production —
+with no local Docker DB (ADRs 0001, 0003).
+
+**Create a migration** (hand-write the SQL into the generated file):
+
+```bash
+supabase migration new <name>
+```
+
+**Apply it to both projects** with the dual-push script — the only supported way
+to push, so the two projects can't drift:
+
+```bash
+# Connection strings are operator credentials — set them in your shell, never
+# commit them (get each from Supabase → Project Settings → Database).
+export SUPABASE_DB_URL_TEST="postgres://...supabase.co:5432/postgres"   # mipin-test
+export SUPABASE_DB_URL_PROD="postgres://...supabase.co:5432/postgres"   # production
+
+npm run db:push            # previews both, asks once, then applies test → prod
+npm run db:push -- --yes   # non-interactive (skips the confirmation)
+```
+
+The script pushes to `mipin-test` first (the canary), then production, and never
+edits an already-pushed migration (migrations are append-only, ADR 0001).
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

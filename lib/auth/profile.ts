@@ -1,14 +1,6 @@
 import "server-only";
-import type { PostgrestError, SupabaseClient } from "@supabase/supabase-js";
-
-/**
- * Whether a query failed only because the table doesn't exist yet. PostgREST
- * reports a not-yet-created table as `PGRST205`; some versions surface the raw
- * Postgres `42P01`. Either means "the `profiles` table lands in cluster 3.3".
- */
-function isMissingTable(error: PostgrestError): boolean {
-  return error.code === "PGRST205" || error.code === "42P01";
-}
+import type { SupabaseClient } from "@supabase/supabase-js";
+import { isMissingTable } from "@/lib/supabase/errors";
 
 /**
  * Whether the signed-in user has an onboarding-complete `profiles` row — the

@@ -72,10 +72,10 @@ function adminClient() {
   });
 }
 
-type MintedUser = { id: string; email: string };
+export type MintedUser = { id: string; email: string; password: string };
 
 /** Create a confirmed test user via the service role. */
-async function createUser(): Promise<MintedUser & { password: string }> {
+export async function createUser(): Promise<MintedUser> {
   const email = `e2e+${crypto.randomUUID()}@mipin.test`;
   const password = crypto.randomUUID();
   const { data, error } = await adminClient().auth.admin.createUser({
@@ -148,12 +148,23 @@ async function sessionCookies(email: string, password: string) {
   }));
 }
 
+/**
+ * Plant a real minted session for `user` into the page's browser context. Call
+ * it more than once for the same user to simulate a later sign-in on the same
+ * account — the cookies are re-minted, but the account (and anything keyed to it,
+ * like an Age wall) is the same. Used by the `authedPage` fixture and directly by
+ * specs that manage their own user lifecycle.
+ */
+export async function mintSession(page: Page, user: MintedUser): Promise<void> {
+  await page
+    .context()
+    .addCookies(await sessionCookies(user.email, user.password));
+}
+
 export const test = base.extend<{ authedPage: Page }>({
   authedPage: async ({ page }, use) => {
     const user = await createUser();
-    await page
-      .context()
-      .addCookies(await sessionCookies(user.email, user.password));
+    await mintSession(page, user);
     // `use` is Playwright's fixture runner, not a React hook.
     // eslint-disable-next-line react-hooks/rules-of-hooks
     await use(page);
