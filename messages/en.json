@@ -10,6 +10,24 @@
     "nonAffiliation": "mipin is an independent, free project. It has no affiliation or relationship with the Central American and Caribbean Games Santo Domingo 2026 or its organizers.",
     "cta": "Browse pins"
   },
+  "SignIn": {
+    "title": "Sign in to mipin",
+    "lede": "Sign in to swap pins and meet athletes from other delegations.",
+    "google": "Continue with Google",
+    "or": "or",
+    "emailLabel": "Email",
+    "emailPlaceholder": "you@email.com",
+    "magicLink": "Send sign-in link",
+    "checkEmailTitle": "Check your email",
+    "checkEmailBody": "If {email} is a valid account, we sent you a sign-in link. Check your inbox.",
+    "error": "We couldn't complete sign-in. Please try again."
+  },
+  "Auth": {
+    "signOut": "Sign out"
+  },
+  "Onboarding": {
+    "title": "Create your profile"
+  },
   "LocaleToggle": {
     "label": "Language",
     "es": "ES",

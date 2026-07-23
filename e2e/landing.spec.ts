@@ -87,13 +87,19 @@ test.describe("the Landing", () => {
     expect(fontSize).toBeGreaterThan(12); // larger than the footer's text-xs
   });
 
-  test("has a single CTA that navigates to /pines", async ({ page }) => {
+  test("has a single CTA that navigates to the sign-in page", async ({
+    page,
+  }) => {
     await page.goto("/");
 
     const cta = page.getByTestId("landing-cta");
     await expect(cta).toBeVisible();
     await cta.click();
-    await expect(page).toHaveURL(/\/pines$/);
+    // Issue #31: the CTA now leads to the dedicated sign-in page, not /pines.
+    await expect(page).toHaveURL(/\/entrar$/);
+    await expect(
+      page.getByRole("heading", { name: /Entra a mipin/ }),
+    ).toBeVisible();
   });
 
   test("carries the Shell header (toggle + share) and footer", async ({

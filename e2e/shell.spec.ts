@@ -1,39 +1,49 @@
-import { expect, test } from "@playwright/test";
+import { expect, skipWithoutLiveAuth, test } from "./support/auth";
 
 const TABS = ["/pines", "/intercambios", "/matches", "/perfil"];
 const TAB_BAR = { name: /Navegación|Navigation/ };
 
+/**
+ * The Shell frame (spec #20). Since issue #31 the Shell is session-gated, so its
+ * chrome is only reachable with a minted session — these run behind the auth
+ * fixture and skip (like `db-connectivity.spec.ts`) when RUN_DB_CONNECTIVITY is
+ * unset. The logged-out redirect itself is covered, without secrets, by
+ * `auth-gate.spec.ts`.
+ */
 test.describe("the Shell", () => {
+  skipWithoutLiveAuth();
+
   // The per-tab and mobile checks assert on Spanish copy; pin the context so
-  // they don't depend on the runner's default browser locale. The bilingual
-  // footer test below drives its own contexts and is unaffected.
+  // they don't depend on the runner's default browser locale.
   test.use({ locale: "es-DO" });
 
   for (const path of TABS) {
     test(`${path} renders a coming-soon stub inside the Shell`, async ({
-      page,
+      authedPage,
     }) => {
-      await page.goto(path);
+      await authedPage.goto(path);
 
       // Header wordmark
-      await expect(page.getByRole("link", { name: "mipin" })).toBeVisible();
+      await expect(
+        authedPage.getByRole("link", { name: "mipin" }),
+      ).toBeVisible();
       // Coming-soon stub content
-      await expect(page.getByText("Muy pronto")).toBeVisible();
+      await expect(authedPage.getByText("Muy pronto")).toBeVisible();
       // Bottom tab bar with the four destinations
-      const tabBar = page.getByRole("navigation", TAB_BAR);
+      const tabBar = authedPage.getByRole("navigation", TAB_BAR);
       await expect(tabBar.getByRole("link")).toHaveCount(4);
       // Footer non-affiliation line
-      await expect(page.getByText(/Proyecto independiente/)).toBeVisible();
+      await expect(authedPage.getByText(/Proyecto independiente/)).toBeVisible();
     });
   }
 
   test("the tab bar is bottom-fixed and thumb-usable on a mobile viewport", async ({
-    page,
+    authedPage,
   }) => {
-    await page.setViewportSize({ width: 390, height: 844 });
-    await page.goto("/pines");
+    await authedPage.setViewportSize({ width: 390, height: 844 });
+    await authedPage.goto("/pines");
 
-    const tabBar = page.getByRole("navigation", TAB_BAR);
+    const tabBar = authedPage.getByRole("navigation", TAB_BAR);
     await expect(tabBar).toBeVisible();
 
     const position = await tabBar.evaluate(
@@ -42,7 +52,7 @@ test.describe("the Shell", () => {
     expect(position).toBe("fixed");
 
     const box = await tabBar.boundingBox();
-    const viewport = page.viewportSize()!;
+    const viewport = authedPage.viewportSize()!;
     expect(box).not.toBeNull();
     // Sits flush against the bottom of the viewport, spans its full width...
     expect(box!.y + box!.height).toBeGreaterThan(viewport.height - 2);
@@ -50,19 +60,23 @@ test.describe("the Shell", () => {
     // ...and each of the four targets clears the ~44px thumb minimum.
     expect(box!.height).toBeGreaterThanOrEqual(48);
   });
+});
 
-  test("the footer non-affiliation line appears in both languages", async ({
-    browser,
-  }) => {
+/**
+ * The footer non-affiliation line is identical on the Landing and the Shell;
+ * assert its bilingual copy on the Landing, which needs no session.
+ */
+test.describe("the footer", () => {
+  test("non-affiliation line appears in both languages", async ({ browser }) => {
     const es = await browser.newContext({ locale: "es-DO" });
     const esPage = await es.newPage();
-    await esPage.goto("/matches");
+    await esPage.goto("/");
     await expect(esPage.getByText(/Proyecto independiente/)).toBeVisible();
     await es.close();
 
     const en = await browser.newContext({ locale: "en-US" });
     const enPage = await en.newPage();
-    await enPage.goto("/matches");
+    await enPage.goto("/");
     await expect(enPage.getByText(/Independent, free project/)).toBeVisible();
     await en.close();
   });

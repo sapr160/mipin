@@ -10,6 +10,24 @@
     "nonAffiliation": "mipin es un proyecto independiente y gratuito. No tiene afiliación ni relación con los Juegos Centroamericanos y del Caribe Santo Domingo 2026 ni con sus organizadores.",
     "cta": "Ver pines"
   },
+  "SignIn": {
+    "title": "Entra a mipin",
+    "lede": "Inicia sesión para intercambiar pines y conocer atletas de otras delegaciones.",
+    "google": "Continuar con Google",
+    "or": "o",
+    "emailLabel": "Correo electrónico",
+    "emailPlaceholder": "tu@correo.com",
+    "magicLink": "Enviar enlace de acceso",
+    "checkEmailTitle": "Revisa tu correo",
+    "checkEmailBody": "Si {email} es una cuenta válida, te enviamos un enlace para entrar. Revisa tu bandeja de entrada.",
+    "error": "No pudimos completar el inicio de sesión. Inténtalo de nuevo."
+  },
+  "Auth": {
+    "signOut": "Cerrar sesión"
+  },
+  "Onboarding": {
+    "title": "Crea tu perfil"
+  },
   "LocaleToggle": {
     "label": "Idioma",
     "es": "ES",
