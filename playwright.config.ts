@@ -1,5 +1,15 @@
 import { defineConfig, devices } from "@playwright/test";
 
+// Load `.env.local` into the test process so the auth fixture can reach the
+// `mipin-test` project with the service role (Next loads it for the webServer
+// on its own; this covers the Playwright process too). Absent in bare lanes —
+// the auth-fixture specs then stay skipped behind RUN_DB_CONNECTIVITY.
+try {
+  process.loadEnvFile(".env.local");
+} catch {
+  // No .env.local — fine; the gated specs skip.
+}
+
 /**
  * The repo's single, standing test seam: the browser/HTTP boundary, exercised
  * against a production build (`next build` + `next start`). CI-runnable — the

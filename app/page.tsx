@@ -9,7 +9,7 @@ import { Header } from "@/components/Header";
  * and center, the swipe side framed neutrally (decision from #4: "conoce
  * atletas de otras delegaciones", no dating-app branding), a note that sharing
  * improves your own feed, a prominent non-affiliation line, and a single CTA to
- * `/pines` (cluster 3 will swap it for the auth flow).
+ * the sign-in page `/entrar` (issue #31 / user story 1).
  *
  * It wears the Shell's Header (toggle + Share) and Footer, but not the tab bar:
  * a logged-out visitor has no tabs to badge yet.
@@ -80,7 +80,7 @@ export default function Landing() {
 
         <Link
           data-testid="landing-cta"
-          href="/pines"
+          href="/entrar"
           className="rounded-lg bg-zinc-900 px-6 py-3 text-base font-medium text-white transition-colors hover:bg-zinc-700 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-200"
         >
           {t("cta")}

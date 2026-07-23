@@ -17,7 +17,9 @@ test.describe("the Share prompt", () => {
   }) => {
     const context = await browser.newContext({ locale: "es-DO" });
     const page = await context.newPage();
-    await page.goto("/pines");
+    // The Share prompt lives in the Header, shared by the Landing and the Shell;
+    // assert it on the Landing, which needs no session (the Shell is now gated).
+    await page.goto("/");
 
     let message = await shareMessage(page);
     expect(message).toContain("Únete");
