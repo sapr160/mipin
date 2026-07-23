@@ -1,0 +1,11 @@
+{
+  "Home": {
+    "tagline": "Intercambio de pines para atletas. Muy pronto.",
+    "disclaimer": "mipin es un proyecto independiente y gratuito, sin afiliación ni relación con los Juegos Centroamericanos y del Caribe Santo Domingo 2026 ni con sus organizadores."
+  },
+  "LocaleToggle": {
+    "label": "Idioma",
+    "es": "ES",
+    "en": "EN"
+  }
+}
