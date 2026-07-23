@@ -21,6 +21,20 @@ One of the four bottom-bar destinations: Pines, Intercambios, Matches, Perfil.
 The unread count on a tab, cleared by opening the tab. Counts events newer than the tab's last-seen time; the only notification channel in the MVP.
 _Avoid_: notification, alert
 
+### Identity & profile
+
+**Onboarded**:
+A signed-in user who has completed their profile; the Shell admits only onboarded users.
+_Avoid_: registered, activated, complete profile
+
+**Age wall**:
+The permanent refusal screen shown to an auth account that ever submitted an under-18 date of birth. Sticks to the account forever.
+_Avoid_: age gate (that's the DOB question itself), block, ban
+
+**WhatsApp number**:
+A user's phone number, stored once and visible to no one else until both sides of a match or trade consent to reveal it.
+_Avoid_: phone, contact info
+
 ### Distribution
 
 **Share prompt**:
