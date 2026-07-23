@@ -7,5 +7,26 @@
     "label": "Idioma",
     "es": "ES",
     "en": "EN"
+  },
+  "Nav": {
+    "label": "Navegación",
+    "pines": "Pines",
+    "intercambios": "Intercambios",
+    "matches": "Matches",
+    "perfil": "Perfil"
+  },
+  "Stub": {
+    "comingSoon": "Muy pronto"
+  },
+  "Share": {
+    "label": "Compartir",
+    "message": "Estoy en mipin para intercambiar pines con otros atletas. Únete: {url}"
+  },
+  "Footer": {
+    "nonAffiliation": "Proyecto independiente y gratuito, sin afiliación con los Juegos Centroamericanos y del Caribe Santo Domingo 2026.",
+    "terms": "Términos",
+    "privacy": "Privacidad",
+    "safety": "Encuentros seguros",
+    "kofi": "Invítame un café"
   }
 }
