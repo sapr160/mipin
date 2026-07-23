@@ -1,7 +1,14 @@
 {
-  "Home": {
-    "tagline": "Intercambio de pines para atletas. Muy pronto.",
-    "disclaimer": "mipin es un proyecto independiente y gratuito, sin afiliación ni relación con los Juegos Centroamericanos y del Caribe Santo Domingo 2026 ni con sus organizadores."
+  "Landing": {
+    "heroTitle": "Intercambia pines en Santo Domingo 2026",
+    "heroLede": "El punto de encuentro no oficial para atletas: intercambia pines y conoce a otras delegaciones.",
+    "pinsTitle": "Intercambia tus pines",
+    "pinsBody": "Publica los pines que tienes y los que buscas. Encuentra atletas listos para intercambiar en persona.",
+    "swipeTitle": "Conoce atletas de otras delegaciones",
+    "swipeBody": "Desliza para descubrir atletas de otros países y ponerse de acuerdo para intercambiar.",
+    "shareNote": "Comparte mipin con tu equipo: mientras más atletas se unan, mejor será tu feed de intercambios.",
+    "nonAffiliation": "mipin es un proyecto independiente y gratuito. No tiene afiliación ni relación con los Juegos Centroamericanos y del Caribe Santo Domingo 2026 ni con sus organizadores.",
+    "cta": "Ver pines"
   },
   "LocaleToggle": {
     "label": "Idioma",
