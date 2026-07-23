@@ -20,7 +20,8 @@
     "pines": "Pines",
     "intercambios": "Intercambios",
     "matches": "Matches",
-    "perfil": "Perfil"
+    "perfil": "Perfil",
+    "unread": "{count} sin ver"
   },
   "Stub": {
     "comingSoon": "Muy pronto"

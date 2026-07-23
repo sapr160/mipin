@@ -1,6 +1,7 @@
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { TabBar } from "@/components/TabBar";
+import { TabBadgeProvider } from "@/components/tab-badge/TabBadgeProvider";
 
 /**
  * The Shell — the permanent frame every feature ships into (spec #20 / domain
@@ -16,11 +17,13 @@ export default function ShellLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <div className="flex min-h-full flex-1 flex-col pb-16">
-      <Header />
-      <main className="flex flex-1 flex-col">{children}</main>
-      <Footer />
-      <TabBar />
-    </div>
+    <TabBadgeProvider>
+      <div className="flex min-h-full flex-1 flex-col pb-16">
+        <Header />
+        <main className="flex flex-1 flex-col">{children}</main>
+        <Footer />
+        <TabBar />
+      </div>
+    </TabBadgeProvider>
   );
 }
