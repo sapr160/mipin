@@ -7,3 +7,4 @@ Schema changes live as checked-in SQL files in `supabase/migrations/` (`supabase
 - Migrations are append-only once pushed; never edit a pushed migration file.
 - The dashboard SQL editor is for inspection/emergencies only — any schema change made there must be immediately backfilled as a migration file, or the checked-in history stops being the truth.
 - If a local dev DB is ever wanted post-launch, `supabase start` can replay the same migration history — nothing blocks reversal.
+- Amended by ADR 0003: dev and e2e now run against a second hosted project (`mipin-test`); "the hosted database" is plural, and pushes go to both via one script.
