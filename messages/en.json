@@ -1,7 +1,14 @@
 {
-  "Home": {
-    "tagline": "Pin exchange for athletes. Coming soon.",
-    "disclaimer": "mipin is an independent, free project with no affiliation or relationship with the Central American and Caribbean Games Santo Domingo 2026 or its organizers."
+  "Landing": {
+    "heroTitle": "Swap pins at Santo Domingo 2026",
+    "heroLede": "The unofficial meeting point for athletes: swap pins and meet other delegations.",
+    "pinsTitle": "Swap your pins",
+    "pinsBody": "Post the pins you have and the ones you want. Find athletes ready to trade in person.",
+    "swipeTitle": "Meet athletes from other delegations",
+    "swipeBody": "Swipe to discover athletes from other countries and agree on a trade.",
+    "shareNote": "Share mipin with your team: the more athletes join, the better your exchange feed.",
+    "nonAffiliation": "mipin is an independent, free project. It has no affiliation or relationship with the Central American and Caribbean Games Santo Domingo 2026 or its organizers.",
+    "cta": "Browse pins"
   },
   "LocaleToggle": {
     "label": "Language",

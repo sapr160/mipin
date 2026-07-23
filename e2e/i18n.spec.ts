@@ -6,7 +6,9 @@ test.describe("first-visit locale negotiation", () => {
     const page = await context.newPage();
     await page.goto("/");
 
-    await expect(page.getByText("Coming soon.")).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: /Swap pins/ }),
+    ).toBeVisible();
     await expect(page.locator("html")).toHaveAttribute("lang", "en");
 
     await context.close();
@@ -17,7 +19,9 @@ test.describe("first-visit locale negotiation", () => {
     const page = await context.newPage();
     await page.goto("/");
 
-    await expect(page.getByText("Muy pronto.")).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: /Intercambia pines/ }),
+    ).toBeVisible();
     await expect(page.locator("html")).toHaveAttribute("lang", "es");
 
     await context.close();
@@ -34,8 +38,8 @@ test.describe("first-visit locale negotiation", () => {
     });
     const html = await response.text();
 
-    expect(html).toContain("Muy pronto.");
+    expect(html).toContain("Intercambia pines");
     expect(html).toContain('lang="es"');
-    expect(html).not.toContain("Coming soon.");
+    expect(html).not.toContain("Swap pins");
   });
 });
