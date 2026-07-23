@@ -7,5 +7,26 @@
     "label": "Language",
     "es": "ES",
     "en": "EN"
+  },
+  "Nav": {
+    "label": "Navigation",
+    "pines": "Pins",
+    "intercambios": "Exchanges",
+    "matches": "Matches",
+    "perfil": "Profile"
+  },
+  "Stub": {
+    "comingSoon": "Coming soon"
+  },
+  "Share": {
+    "label": "Share",
+    "message": "I'm on mipin to swap pins with other athletes. Join me: {url}"
+  },
+  "Footer": {
+    "nonAffiliation": "Independent, free project with no affiliation with the Central American and Caribbean Games Santo Domingo 2026.",
+    "terms": "Terms",
+    "privacy": "Privacy",
+    "safety": "Safe meetups",
+    "kofi": "Buy me a coffee"
   }
 }
