@@ -57,8 +57,9 @@ test.describe("profile photo pending model", () => {
       await expect(page.getByTestId("profile-photo-placeholder")).toBeVisible();
       await expect(page.getByTestId("profile-photo")).toHaveCount(0);
 
-      // Upload a photo through the Perfil form (owner's authenticated server
-      // client → the owner-write Storage RLS + the set_profile_photo RPC).
+      // Upload a photo through the Perfil form: the server action writes the
+      // bytes via the service role (bound to the session's user id) and records
+      // the path+state via the set_profile_photo RPC, which runs as the owner.
       await page.getByTestId("profile-photo-input").setInputFiles(pngUpload());
       await page.getByTestId("profile-photo-submit").click();
 
@@ -168,6 +169,70 @@ test.describe("profile photo pending model", () => {
       await svc.storage.from(PHOTO_BUCKET).remove([path]);
       await deleteUser(owner.id);
       await deleteUser(other.id);
+    }
+  });
+
+  test("the moderation state is writable only through set_profile_photo, never a direct client PATCH", async () => {
+    // The pending model's core invariant: the only in-app transition is
+    // "→ pending". A trigger (20260724171000) rejects any client write to
+    // photo_state/photo_path, so a client can move to pending ONLY via the
+    // set_profile_photo RPC and can never self-approve or repoint the path by
+    // PATCHing the columns straight through PostgREST — which the
+    // row-scoped-but-not-column-scoped owner-update RLS policy would otherwise allow.
+    const owner = await createUser();
+    const svc = serviceClient();
+    try {
+      await seedProfile(owner.id);
+      const client = await signedInClient(owner);
+
+      // The sanctioned path still works: the RPC (SECURITY DEFINER) moves the
+      // owner's own row to pending and records the canonical path.
+      const { error: rpcErr } = await client.rpc("set_profile_photo");
+      expect(rpcErr).toBeNull();
+      const pending = async () =>
+        (
+          await svc
+            .from("profiles")
+            .select("photo_path, photo_state")
+            .eq("id", owner.id)
+            .single()
+        ).data;
+      expect((await pending())?.photo_state).toBe("pending");
+      expect((await pending())?.photo_path).toBe(profilePhotoPath(owner.id));
+
+      // The bypass is closed: a direct PATCH to self-approve is denied, and the
+      // state stays exactly where the RPC left it.
+      const { error: approveErr } = await client
+        .from("profiles")
+        .update({ photo_state: "approved" })
+        .eq("id", owner.id);
+      expect(approveErr).not.toBeNull();
+      expect((await pending())?.photo_state).toBe("pending");
+
+      // Repointing the path (to sign another athlete's object as one's own) is
+      // denied for the same reason.
+      const { error: repointErr } = await client
+        .from("profiles")
+        .update({ photo_path: `${crypto.randomUUID()}/photo` })
+        .eq("id", owner.id);
+      expect(repointErr).not.toBeNull();
+      expect((await pending())?.photo_path).toBe(profilePhotoPath(owner.id));
+
+      // The editable card fields are untouched by the revoke — update_profile
+      // still writes them (regression guard: the column revoke must be surgical).
+      const { error: editErr } = await client.rpc("update_profile", {
+        p_display_name: "Renamed Athlete",
+        p_delegation: "DO",
+        p_sport: "athletics",
+        p_gender: "woman",
+        p_bio: null,
+        p_show_me: "everyone",
+        p_whatsapp: null,
+      });
+      expect(editErr).toBeNull();
+    } finally {
+      await svc.storage.from(PHOTO_BUCKET).remove([profilePhotoPath(owner.id)]);
+      await deleteUser(owner.id);
     }
   });
 });
