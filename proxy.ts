@@ -5,10 +5,7 @@ import {
   LOCALE_COOKIE,
   negotiateLocale,
 } from "@/i18n/config";
-
-const SRC_COOKIE = "mipin_src";
-/** The only sources we attribute; anything else is ignored. */
-const ALLOWED_SRC = new Set(["qr", "share"]);
+import { readFirstTouch, SRC_COOKIE } from "@/lib/first-touch";
 
 /**
  * Two first-visit, server-side jobs (ADR 0002 + spec #18):
@@ -21,8 +18,8 @@ const ALLOWED_SRC = new Set(["qr", "share"]);
 export function proxy(request: NextRequest) {
   const response = NextResponse.next();
 
-  const src = request.nextUrl.searchParams.get("src");
-  if (src && ALLOWED_SRC.has(src) && !request.cookies.has(SRC_COOKIE)) {
+  const src = readFirstTouch(request.nextUrl.searchParams.get("src"));
+  if (src && !request.cookies.has(SRC_COOKIE)) {
     response.cookies.set(SRC_COOKIE, src, {
       maxAge: COOKIE_MAX_AGE,
       path: "/",

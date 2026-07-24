@@ -4,11 +4,11 @@ const TABS = ["/pines", "/intercambios", "/matches", "/perfil"];
 const TAB_BAR = { name: /Navegación|Navigation/ };
 
 /**
- * The Shell frame (spec #20). Since issue #31 the Shell is session-gated, so its
- * chrome is only reachable with a minted session — these run behind the auth
- * fixture and skip (like `db-connectivity.spec.ts`) when RUN_DB_CONNECTIVITY is
- * unset. The logged-out redirect itself is covered, without secrets, by
- * `auth-gate.spec.ts`.
+ * The Shell frame (spec #20). Since issue #34 the Shell admits only an Onboarded
+ * athlete, so the frame is reached with the `onboardedPage` fixture (a minted
+ * session plus a seeded profile) — these run behind it and skip (like
+ * `db-connectivity.spec.ts`) when RUN_DB_CONNECTIVITY is unset. The logged-out
+ * redirect itself is covered, without secrets, by `auth-gate.spec.ts`.
  */
 test.describe("the Shell", () => {
   skipWithoutLiveAuth();
@@ -19,31 +19,31 @@ test.describe("the Shell", () => {
 
   for (const path of TABS) {
     test(`${path} renders a coming-soon stub inside the Shell`, async ({
-      authedPage,
+      onboardedPage,
     }) => {
-      await authedPage.goto(path);
+      await onboardedPage.goto(path);
 
       // Header wordmark
       await expect(
-        authedPage.getByRole("link", { name: "mipin" }),
+        onboardedPage.getByRole("link", { name: "mipin" }),
       ).toBeVisible();
       // Coming-soon stub content
-      await expect(authedPage.getByText("Muy pronto")).toBeVisible();
+      await expect(onboardedPage.getByText("Muy pronto")).toBeVisible();
       // Bottom tab bar with the four destinations
-      const tabBar = authedPage.getByRole("navigation", TAB_BAR);
+      const tabBar = onboardedPage.getByRole("navigation", TAB_BAR);
       await expect(tabBar.getByRole("link")).toHaveCount(4);
       // Footer non-affiliation line
-      await expect(authedPage.getByText(/Proyecto independiente/)).toBeVisible();
+      await expect(onboardedPage.getByText(/Proyecto independiente/)).toBeVisible();
     });
   }
 
   test("the tab bar is bottom-fixed and thumb-usable on a mobile viewport", async ({
-    authedPage,
+    onboardedPage,
   }) => {
-    await authedPage.setViewportSize({ width: 390, height: 844 });
-    await authedPage.goto("/pines");
+    await onboardedPage.setViewportSize({ width: 390, height: 844 });
+    await onboardedPage.goto("/pines");
 
-    const tabBar = authedPage.getByRole("navigation", TAB_BAR);
+    const tabBar = onboardedPage.getByRole("navigation", TAB_BAR);
     await expect(tabBar).toBeVisible();
 
     const position = await tabBar.evaluate(
@@ -52,7 +52,7 @@ test.describe("the Shell", () => {
     expect(position).toBe("fixed");
 
     const box = await tabBar.boundingBox();
-    const viewport = authedPage.viewportSize()!;
+    const viewport = onboardedPage.viewportSize()!;
     expect(box).not.toBeNull();
     // Sits flush against the bottom of the viewport, spans its full width...
     expect(box!.y + box!.height).toBeGreaterThan(viewport.height - 2);

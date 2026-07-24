@@ -12,9 +12,9 @@ import { SIGN_IN_PATH, APP_HOME_PATH } from "@/lib/auth/routes";
  *
  *   - no session   → sign-in;
  *   - Age wall      → the permanent refusal screen (a rejection row exists);
- *   - onboarded     → into the app (an Onboarded athlete never sees stale flows;
- *                     `hasProfile` is always false until the profile-table ticket,
- *                     so this branch is wired now and lights up then);
+ *   - onboarded     → into the app (an Onboarded athlete never sees stale flows —
+ *                     the profile-side bounce is live since issue #34, the mirror
+ *                     of the Shell gate's not-onboarded → onboarding redirect);
  *   - otherwise     → the onboarding step (children).
  *
  * Because every onboarding route is wrapped here, a walled account sees the wall

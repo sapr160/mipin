@@ -18,9 +18,8 @@ import {
  * account has no profile, so it lands on onboarding — where the onboarding layout
  * renders the wall from the account's rejection row. The layout is the single
  * owner of wall-vs-form, so it can't be walked around by a deep link, and the
- * callback needs only to route profile-less accounts there. (`hasProfile` still
- * reports false for everyone until the profile-table ticket, so every fresh
- * sign-in reaches onboarding for now.)
+ * callback needs only to route profile-less accounts there. Since issue #34 an
+ * Onboarded account (a `profiles` row exists) instead lands straight on the app.
  *
  * A missing or unusable code bounces back to the sign-in page rather than
  * erroring, so a stale or tampered link is a soft failure, not a 500.
