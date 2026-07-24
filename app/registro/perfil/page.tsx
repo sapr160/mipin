@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { createProfile } from "../actions";
 import { ProfileFieldset } from "@/components/profile/ProfileFieldset";
+import { PhotoField } from "@/components/profile/PhotoField";
 import { DOB_COOKIE } from "@/lib/auth/onboarding";
 import { ONBOARDING_PATH } from "@/lib/auth/routes";
 
@@ -61,8 +62,16 @@ export default async function OnboardingProfilePage({
           </p>
         )}
 
-        <form action={createProfile} className="flex flex-col gap-6">
+        <form
+          action={createProfile}
+          encType="multipart/form-data"
+          className="flex flex-col gap-6"
+        >
           <ProfileFieldset />
+
+          {/* Optional profile photo (issue #36). Left empty, onboarding proceeds
+              photo-less; a chosen photo lands in the 'pending' state. */}
+          <PhotoField label={t("photoLabel")} help={t("photoHelp")} />
 
           {/* The two required consent checkboxes (spec user story 14). */}
           <div className="flex flex-col gap-3">

@@ -52,6 +52,8 @@
     "bioLabel": "Bio (opcional)",
     "bioHelp": "Hasta 160 caracteres.",
     "bioPlaceholder": "Algo sobre ti y los pines que buscas.",
+    "photoLabel": "Foto (opcional)",
+    "photoHelp": "JPG, PNG o WebP, hasta 5 MB. Los demás la verán cuando se apruebe.",
     "consentAge": "Confirmo que tengo 18 años o más y que mi información es verídica.",
     "consentTerms": "Acepto los <terms>Términos</terms> y la <privacy>Política de privacidad</privacy>.",
     "submit": "Crear perfil"
@@ -68,6 +70,15 @@
     "whatsappLabel": "Número de WhatsApp (opcional)",
     "whatsappHelp": "En formato internacional, ej. +1 809 555 1234. Solo tú lo ves.",
     "whatsappPlaceholder": "+1 809 555 1234",
+    "photoPending": "Pendiente de aprobación",
+    "photoAdd": "Agregar foto",
+    "photoReplace": "Cambiar foto",
+    "photoUpload": "Subir foto",
+    "photoHelp": "JPG, PNG o WebP, hasta 5 MB.",
+    "photoReplaceWarning": "Al cambiar tu foto quedará oculta para los demás hasta que se apruebe de nuevo.",
+    "photoRejected": "Esa foto no se pudo aprobar. Prueba con otra.",
+    "photoSaved": "Foto subida. Se mostrará cuando se apruebe.",
+    "photoError": "No pudimos subir esa foto. Usa JPG, PNG o WebP de hasta 5 MB.",
     "save": "Guardar cambios"
   },
   "Welcome": {

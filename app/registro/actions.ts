@@ -6,8 +6,9 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { checkDob } from "@/lib/auth/age";
 import { isAgeRejected, recordAgeRejection } from "@/lib/auth/age-rejection";
-import { hasProfile } from "@/lib/auth/profile";
+import { hasProfile, storeProfilePhoto } from "@/lib/auth/profile";
 import { parseProfileForm } from "@/lib/auth/profile-form";
+import { validatePhotoUpload } from "@/lib/auth/profile-photo";
 import {
   DOB_COOKIE,
   ONBOARDING_COOKIE_MAX_AGE,
@@ -131,6 +132,13 @@ export async function createProfile(formData: FormData): Promise<void> {
   if (!parsed.ok) redirect(`${ONBOARDING_PROFILE_PATH}?error=1`);
   const { displayName, delegation, sport, gender, showMe, bio } = parsed.values;
 
+  // The optional photo (issue #36) is validated BEFORE the profile is created, so
+  // a bad file re-renders the form generically like any other field — once
+  // create_profile commits there is no form to return to. The bytes are stored
+  // only after the commit (below), as best-effort.
+  const photo = validatePhotoUpload(formData.get("photo"));
+  if (!photo.ok) redirect(`${ONBOARDING_PROFILE_PATH}?error=1`);
+
   // Copy the request's language and first-touch attribution onto the rows (spec
   // user stories 24 & 29). Locale falls back to the default; first-touch is null
   // for a visitor who never arrived via a tagged link.
@@ -151,7 +159,19 @@ export async function createProfile(formData: FormData): Promise<void> {
   });
   if (error) throw error;
 
-  // Onboarded now. Drop the carried DOB and arm the one-time Share prompt.
+  // Onboarded now (create_profile committed). Store the optional photo
+  // best-effort: the account is already onboarded, so a storage hiccup must not
+  // fail the flow — the athlete can add a photo later in Perfil. A successful
+  // upload lands it in the 'pending' state, shown to no one until approved.
+  if (photo.file) {
+    try {
+      await storeProfilePhoto(supabase, user.id, photo.file);
+    } catch {
+      // Swallowed deliberately: onboarding succeeded; the photo is optional.
+    }
+  }
+
+  // Drop the carried DOB and arm the one-time Share prompt.
   cookieStore.delete(DOB_COOKIE);
   cookieStore.set(WELCOME_COOKIE, "1", {
     maxAge: ONBOARDING_COOKIE_MAX_AGE,

@@ -52,6 +52,8 @@
     "bioLabel": "Bio (optional)",
     "bioHelp": "Up to 160 characters.",
     "bioPlaceholder": "A bit about you and the pins you're after.",
+    "photoLabel": "Photo (optional)",
+    "photoHelp": "JPG, PNG or WebP, up to 5 MB. Others see it once it's approved.",
     "consentAge": "I confirm I'm 18 or older and that my information is accurate.",
     "consentTerms": "I accept the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.",
     "submit": "Create profile"
@@ -68,6 +70,15 @@
     "whatsappLabel": "WhatsApp number (optional)",
     "whatsappHelp": "In international format, e.g. +1 809 555 1234. Only you can see it.",
     "whatsappPlaceholder": "+1 809 555 1234",
+    "photoPending": "Pending approval",
+    "photoAdd": "Add a photo",
+    "photoReplace": "Replace photo",
+    "photoUpload": "Upload photo",
+    "photoHelp": "JPG, PNG or WebP, up to 5 MB.",
+    "photoReplaceWarning": "Replacing your photo hides it from others until it's approved again.",
+    "photoRejected": "That photo couldn't be approved. Try another one.",
+    "photoSaved": "Photo uploaded. It'll show once approved.",
+    "photoError": "We couldn't upload that photo. Use a JPG, PNG or WebP up to 5 MB.",
     "save": "Save changes"
   },
   "Welcome": {
