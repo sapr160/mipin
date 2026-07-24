@@ -3,17 +3,20 @@ import { getTranslations } from "next-intl/server";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { SignInForm } from "@/components/auth/SignInForm";
-import { getSessionUser } from "@/lib/auth/session";
-import { APP_HOME_PATH } from "@/lib/auth/routes";
+import { createClient } from "@/lib/supabase/server";
+import { hasProfile } from "@/lib/auth/profile";
+import { APP_HOME_PATH, ONBOARDING_PATH } from "@/lib/auth/routes";
 
 /**
  * The sign-in page (issue #31 / user story 1), the dedicated destination of the
  * Landing CTA. Carries the non-affiliation line, bilingual copy (via the cookie
  * locale, ADR 0002), the primary Google button and the magic-link fallback.
  *
- * An already-signed-in visitor is bounced into the app (user story 6) so they
- * never see a stale sign-in flow. Reuses the Shell's Header/Footer for the
- * toggle, share prompt and legal links, matching the Landing.
+ * A signed-in visitor is bounced off this page (user story 6): an Onboarded
+ * athlete into the app, a signed-in-but-not-Onboarded account to onboarding —
+ * the same routing the auth callback makes, so no one lands here on a stale flow.
+ * Reuses the Shell's Header/Footer for the toggle, share prompt and legal links,
+ * matching the Landing.
  *
  * Forced dynamic: it reads the session per request and the Footer reads
  * `KOFI_URL` per request.
@@ -25,7 +28,15 @@ export default async function EntrarPage({
 }: {
   searchParams: Promise<{ error?: string }>;
 }) {
-  if (await getSessionUser()) redirect(APP_HOME_PATH);
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (user) {
+    redirect(
+      (await hasProfile(supabase, user.id)) ? APP_HOME_PATH : ONBOARDING_PATH,
+    );
+  }
 
   // A failed code exchange bounces back here with `?error=` (see the callback).
   // Surface it as one generic notice — never which code — so the "soft failure"

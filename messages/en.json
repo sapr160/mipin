@@ -31,11 +31,39 @@
     "dobLede": "mipin is only for users 18+. Confirm your date of birth to continue.",
     "dobLabel": "Date of birth",
     "dobSubmit": "Continue",
-    "dobError": "Enter a valid date of birth."
+    "dobError": "Enter a valid date of birth.",
+    "formLede": "This is how other delegations will see you. Takes a minute.",
+    "formError": "Please check the fields and try again.",
+    "nameLabel": "Name or nickname",
+    "nameHelp": "Use the name people know you by — no need for your legal name.",
+    "namePlaceholder": "e.g. Pincoya",
+    "delegationLabel": "Delegation",
+    "delegationPlaceholder": "Choose your delegation",
+    "sportLabel": "Sport",
+    "sportPlaceholder": "Choose your sport",
+    "genderLabel": "Gender",
+    "genderWoman": "Woman",
+    "genderMan": "Man",
+    "genderNonbinary": "Non-binary or other",
+    "showMeLabel": "Show me",
+    "showMeWomen": "Women",
+    "showMeMen": "Men",
+    "showMeEveryone": "Everyone",
+    "bioLabel": "Bio (optional)",
+    "bioHelp": "Up to 160 characters.",
+    "bioPlaceholder": "A bit about you and the pins you're after.",
+    "consentAge": "I confirm I'm 18 or older and that my information is accurate.",
+    "consentTerms": "I accept the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.",
+    "submit": "Create profile"
   },
   "AgeWall": {
     "title": "mipin is only for users 18+",
     "body": "We can't create your account. This decision is permanent for this account."
+  },
+  "Welcome": {
+    "title": "You're in! Share with your team",
+    "body": "The more athletes join, the better your exchange feed. Send it to your team group.",
+    "continue": "Go to Pins"
   },
   "LocaleToggle": {
     "label": "Language",

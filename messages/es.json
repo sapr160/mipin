@@ -31,11 +31,39 @@
     "dobLede": "mipin es solo para mayores de 18 años. Confirma tu fecha de nacimiento para continuar.",
     "dobLabel": "Fecha de nacimiento",
     "dobSubmit": "Continuar",
-    "dobError": "Ingresa una fecha de nacimiento válida."
+    "dobError": "Ingresa una fecha de nacimiento válida.",
+    "formLede": "Así te verán otras delegaciones. Toma un minuto.",
+    "formError": "Revisa los campos e inténtalo de nuevo.",
+    "nameLabel": "Nombre o apodo",
+    "nameHelp": "Usa el nombre con el que te conocen. No hace falta tu nombre legal.",
+    "namePlaceholder": "Ej. Pincoya",
+    "delegationLabel": "Delegación",
+    "delegationPlaceholder": "Elige tu delegación",
+    "sportLabel": "Deporte",
+    "sportPlaceholder": "Elige tu deporte",
+    "genderLabel": "Género",
+    "genderWoman": "Mujer",
+    "genderMan": "Hombre",
+    "genderNonbinary": "No binario u otro",
+    "showMeLabel": "Mostrarme",
+    "showMeWomen": "Mujeres",
+    "showMeMen": "Hombres",
+    "showMeEveryone": "Todos",
+    "bioLabel": "Bio (opcional)",
+    "bioHelp": "Hasta 160 caracteres.",
+    "bioPlaceholder": "Algo sobre ti y los pines que buscas.",
+    "consentAge": "Confirmo que tengo 18 años o más y que mi información es verídica.",
+    "consentTerms": "Acepto los <terms>Términos</terms> y la <privacy>Política de privacidad</privacy>.",
+    "submit": "Crear perfil"
   },
   "AgeWall": {
     "title": "mipin es solo para mayores de 18 años",
     "body": "No podemos crear tu cuenta. Esta decisión es permanente para esta cuenta."
+  },
+  "Welcome": {
+    "title": "¡Listo! Comparte con tu equipo",
+    "body": "Mientras más atletas se unan, mejor será tu feed de intercambios. Compártelo en tu grupo.",
+    "continue": "Ir a Pines"
   },
   "LocaleToggle": {
     "label": "Idioma",

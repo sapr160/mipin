@@ -65,7 +65,13 @@ function requireSupabaseEnv(): {
   return { url: SUPABASE_URL, publishable: PUBLISHABLE_KEY, secret: SECRET_KEY };
 }
 
-function adminClient() {
+/**
+ * The service-role client (bypasses RLS). The fixture's own primitive for
+ * creating/deleting users and seeding rows, and the client specs use to inspect
+ * rows a test created — e.g. asserting the values `createProfile` copied onto both
+ * profile rows. Same credentials the app's own service client uses.
+ */
+export function serviceClient() {
   const { url, secret } = requireSupabaseEnv();
   return createClient(url, secret, {
     auth: { persistSession: false, autoRefreshToken: false },
@@ -78,7 +84,7 @@ export type MintedUser = { id: string; email: string; password: string };
 export async function createUser(): Promise<MintedUser> {
   const email = `e2e+${crypto.randomUUID()}@mipin.test`;
   const password = crypto.randomUUID();
-  const { data, error } = await adminClient().auth.admin.createUser({
+  const { data, error } = await serviceClient().auth.admin.createUser({
     email,
     password,
     email_confirm: true,
@@ -94,8 +100,27 @@ export async function createUser(): Promise<MintedUser> {
  * primitive the app's account-deletion action will use.
  */
 export async function deleteUser(id: string): Promise<void> {
-  const { error } = await adminClient().auth.admin.deleteUser(id);
+  const { error } = await serviceClient().auth.admin.deleteUser(id);
   if (error) throw error;
+}
+
+/**
+ * A `supabase-js` client authenticated AS `user`, so its JWT is what drives RLS.
+ * Use it to assert, at the API level, what one athlete can and cannot read of
+ * another's rows — never the service role, which would bypass the very RLS under
+ * test.
+ */
+export async function signedInClient(user: MintedUser) {
+  const { url, publishable } = requireSupabaseEnv();
+  const client = createClient(url, publishable, {
+    auth: { persistSession: false, autoRefreshToken: false },
+  });
+  const { error } = await client.auth.signInWithPassword({
+    email: user.email,
+    password: user.password,
+  });
+  if (error) throw error;
+  return client;
 }
 
 /**
@@ -161,11 +186,52 @@ export async function mintSession(page: Page, user: MintedUser): Promise<void> {
     .addCookies(await sessionCookies(user.email, user.password));
 }
 
-export const test = base.extend<{ authedPage: Page }>({
+/**
+ * Make `userId` an Onboarded athlete by seeding both profile rows via the service
+ * role — setup for specs that need to be past the Shell gate but aren't testing
+ * onboarding itself (the Shell admits only Onboarded users since issue #34).
+ * Bypasses RLS and the creation RPC deliberately; the CHECK constraints still
+ * apply, so the codes are real vocabulary values.
+ */
+export async function seedProfile(userId: string): Promise<void> {
+  const svc = serviceClient();
+  const now = new Date().toISOString();
+
+  const { error: publicError } = await svc.from("profiles").insert({
+    id: userId,
+    display_name: "Test Athlete",
+    delegation: "DO",
+    sport: "athletics",
+    gender: "woman",
+    bio: null,
+    locale: "es",
+  });
+  if (publicError) throw publicError;
+
+  const { error: privateError } = await svc.from("profiles_private").insert({
+    id: userId,
+    dob: "1994-03-12",
+    show_me: "everyone",
+    consent_age_accuracy_at: now,
+    consent_terms_privacy_at: now,
+    first_touch_source: null,
+  });
+  if (privateError) throw privateError;
+}
+
+export const test = base.extend<{ authedPage: Page; onboardedPage: Page }>({
   authedPage: async ({ page }, use) => {
     const user = await createUser();
     await mintSession(page, user);
     // `use` is Playwright's fixture runner, not a React hook.
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    await use(page);
+    await deleteUser(user.id);
+  },
+  onboardedPage: async ({ page }, use) => {
+    const user = await createUser();
+    await seedProfile(user.id);
+    await mintSession(page, user);
     // eslint-disable-next-line react-hooks/rules-of-hooks
     await use(page);
     await deleteUser(user.id);
