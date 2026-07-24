@@ -35,8 +35,9 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
-# ...but the committed template of required keys is tracked.
+# ...but the committed templates of required keys are tracked.
 !.env.example
+!.env.db.example
 
 # vercel
 .vercel
