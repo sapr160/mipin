@@ -1,18 +1,11 @@
 import { cookies } from "next/headers";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { getLocale, getTranslations } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
 import { createProfile } from "../actions";
+import { ProfileFieldset } from "@/components/profile/ProfileFieldset";
 import { DOB_COOKIE } from "@/lib/auth/onboarding";
 import { ONBOARDING_PATH } from "@/lib/auth/routes";
-import {
-  DEFAULT_SHOW_ME,
-  type Gender,
-  MAX_BIO_LENGTH,
-  MAX_DISPLAY_NAME_LENGTH,
-  type ShowMe,
-} from "@/lib/auth/profile-form";
-import { DELEGATIONS, DISCIPLINES } from "@/lib/vocab";
 
 /**
  * Onboarding step 2 (issue #34): the one profile form. Reached only once the
@@ -21,31 +14,16 @@ import { DELEGATIONS, DISCIPLINES } from "@/lib/vocab";
  * show a form that can't be submitted. The onboarding layout still owns the
  * session/wall/onboarded gate around this route.
  *
- * A plain Server Action form — no client JS. Native constraints (`required`,
- * `maxLength`, a placeholder `<option>`) are UX affordances only; `createProfile`
- * re-validates every field server-side and re-renders here with a generic notice
- * on failure. The pickers are the bilingual vocabulary (issue #33), labelled in
- * the request's language.
+ * A plain Server Action form — no client JS. The shared `ProfileFieldset` renders
+ * the six profile fields (identical to the Perfil edit form); this page adds only
+ * the two required consent checkboxes and the submit. Native constraints are UX
+ * affordances only; `createProfile` re-validates every field server-side and
+ * re-renders here with a generic notice on failure.
  *
  * Forced dynamic: it reads the locale, the DOB cookie, and the error flag per
  * request.
  */
 export const dynamic = "force-dynamic";
-
-const GENDER_OPTIONS = [
-  { value: "woman", labelKey: "genderWoman" },
-  { value: "man", labelKey: "genderMan" },
-  { value: "nonbinary", labelKey: "genderNonbinary" },
-] as const satisfies readonly { value: Gender; labelKey: string }[];
-
-const SHOW_ME_OPTIONS = [
-  { value: "women", labelKey: "showMeWomen" },
-  { value: "men", labelKey: "showMeMen" },
-  { value: "everyone", labelKey: "showMeEveryone" },
-] as const satisfies readonly { value: ShowMe; labelKey: string }[];
-
-const fieldClass =
-  "rounded-lg border border-zinc-300 px-4 py-2.5 text-base outline-none focus:border-zinc-900 dark:border-zinc-700 dark:bg-transparent dark:focus:border-zinc-100";
 
 export default async function OnboardingProfilePage({
   searchParams,
@@ -56,17 +34,7 @@ export default async function OnboardingProfilePage({
   if (!cookieStore.get(DOB_COOKIE)?.value) redirect(ONBOARDING_PATH);
 
   const t = await getTranslations("Onboarding");
-  const locale = await getLocale();
   const invalid = Boolean((await searchParams).error);
-
-  const delegations = DELEGATIONS.map((d) => ({
-    code: d.code,
-    name: locale === "en" ? d.en : d.es,
-  }));
-  const disciplines = DISCIPLINES.map((d) => ({
-    code: d.code,
-    name: locale === "en" ? d.en : d.es,
-  }));
 
   return (
     <main
@@ -94,126 +62,7 @@ export default async function OnboardingProfilePage({
         )}
 
         <form action={createProfile} className="flex flex-col gap-6">
-          {/* Name or nickname. */}
-          <div className="flex flex-col gap-1.5">
-            <label htmlFor="display_name" className="text-sm font-medium">
-              {t("nameLabel")}
-            </label>
-            <input
-              id="display_name"
-              name="display_name"
-              type="text"
-              required
-              maxLength={MAX_DISPLAY_NAME_LENGTH}
-              placeholder={t("namePlaceholder")}
-              data-testid="profile-name"
-              className={fieldClass}
-            />
-            <p className="text-xs text-zinc-500">{t("nameHelp")}</p>
-          </div>
-
-          {/* Delegation picker. */}
-          <div className="flex flex-col gap-1.5">
-            <label htmlFor="delegation" className="text-sm font-medium">
-              {t("delegationLabel")}
-            </label>
-            <select
-              id="delegation"
-              name="delegation"
-              required
-              defaultValue=""
-              data-testid="profile-delegation"
-              className={fieldClass}
-            >
-              <option value="" disabled>
-                {t("delegationPlaceholder")}
-              </option>
-              {delegations.map((d) => (
-                <option key={d.code} value={d.code}>
-                  {d.name}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Sport picker. */}
-          <div className="flex flex-col gap-1.5">
-            <label htmlFor="sport" className="text-sm font-medium">
-              {t("sportLabel")}
-            </label>
-            <select
-              id="sport"
-              name="sport"
-              required
-              defaultValue=""
-              data-testid="profile-sport"
-              className={fieldClass}
-            >
-              <option value="" disabled>
-                {t("sportPlaceholder")}
-              </option>
-              {disciplines.map((d) => (
-                <option key={d.code} value={d.code}>
-                  {d.name}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Gender — required, no default. */}
-          <fieldset className="flex flex-col gap-2">
-            <legend className="mb-1 text-sm font-medium">
-              {t("genderLabel")}
-            </legend>
-            {GENDER_OPTIONS.map((o) => (
-              <label key={o.value} className="flex items-center gap-2 text-base">
-                <input
-                  type="radio"
-                  name="gender"
-                  value={o.value}
-                  required
-                  className="h-4 w-4"
-                />
-                {t(o.labelKey)}
-              </label>
-            ))}
-          </fieldset>
-
-          {/* Show me — defaults to everyone (issue #4). */}
-          <fieldset className="flex flex-col gap-2">
-            <legend className="mb-1 text-sm font-medium">
-              {t("showMeLabel")}
-            </legend>
-            {SHOW_ME_OPTIONS.map((o) => (
-              <label key={o.value} className="flex items-center gap-2 text-base">
-                <input
-                  type="radio"
-                  name="show_me"
-                  value={o.value}
-                  defaultChecked={o.value === DEFAULT_SHOW_ME}
-                  className="h-4 w-4"
-                />
-                {t(o.labelKey)}
-              </label>
-            ))}
-          </fieldset>
-
-          {/* Optional bio, capped at ~160 characters. */}
-          <div className="flex flex-col gap-1.5">
-            <label htmlFor="bio" className="text-sm font-medium">
-              {t("bioLabel")}
-            </label>
-            <textarea
-              id="bio"
-              name="bio"
-              rows={3}
-              maxLength={MAX_BIO_LENGTH}
-              placeholder={t("bioPlaceholder")}
-              data-testid="profile-bio"
-              className={fieldClass}
-            />
-            <p className="text-xs text-zinc-500">{t("bioHelp")}</p>
-          </div>
+          <ProfileFieldset />
 
           {/* The two required consent checkboxes (spec user story 14). */}
           <div className="flex flex-col gap-3">

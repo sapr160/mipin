@@ -9,8 +9,8 @@ export { DELEGATIONS } from "./delegations";
 export type { Discipline } from "./disciplines";
 export { DISCIPLINES } from "./disciplines";
 
-import { DELEGATIONS } from "./delegations";
-import { DISCIPLINES } from "./disciplines";
+import { type Delegation, DELEGATIONS } from "./delegations";
+import { type Discipline, DISCIPLINES } from "./disciplines";
 
 /**
  * The bare `code` values, in source order — the exact strings stored in the
@@ -36,4 +36,37 @@ export function isDelegationCode(value: unknown): value is string {
 /** Whether `value` is a recognised discipline code (a valid `profiles.sport`). */
 export function isDisciplineCode(value: unknown): value is string {
   return typeof value === "string" && disciplineCodeSet.has(value);
+}
+
+const delegationByCode = new Map<string, Delegation>(
+  DELEGATIONS.map((d) => [d.code, d]),
+);
+const disciplineByCode = new Map<string, Discipline>(
+  DISCIPLINES.map((d) => [d.code, d]),
+);
+
+/**
+ * The name to display for a stored `code`, in the reader's language. English
+ * only when `locale` is exactly `"en"`; every other value (including the Spanish
+ * default and any unexpected locale) resolves to the Spanish name, matching the
+ * app's Spanish-default policy (ADR 0002). Returns `undefined` for a code not in
+ * the vocabulary — the caller decides how to render a card whose stored code has
+ * since been retired. `locale` is a plain string, keeping this module free of
+ * any framework/i18n dependency (the picker and the profile card both read it).
+ */
+export function delegationName(
+  code: string,
+  locale: string,
+): string | undefined {
+  const d = delegationByCode.get(code);
+  return d && (locale === "en" ? d.en : d.es);
+}
+
+/** The discipline name for a stored `code`, in the reader's language. See {@link delegationName}. */
+export function disciplineName(
+  code: string,
+  locale: string,
+): string | undefined {
+  const d = disciplineByCode.get(code);
+  return d && (locale === "en" ? d.en : d.es);
 }
