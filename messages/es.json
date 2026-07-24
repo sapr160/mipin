@@ -60,6 +60,16 @@
     "title": "mipin es solo para mayores de 18 años",
     "body": "No podemos crear tu cuenta. Esta decisión es permanente para esta cuenta."
   },
+  "Profile": {
+    "title": "Tu perfil",
+    "editTitle": "Editar perfil",
+    "saved": "Cambios guardados.",
+    "error": "Revisa los campos e inténtalo de nuevo.",
+    "whatsappLabel": "Número de WhatsApp (opcional)",
+    "whatsappHelp": "En formato internacional, ej. +1 809 555 1234. Solo tú lo ves.",
+    "whatsappPlaceholder": "+1 809 555 1234",
+    "save": "Guardar cambios"
+  },
   "Welcome": {
     "title": "¡Listo! Comparte con tu equipo",
     "body": "Mientras más atletas se unan, mejor será tu feed de intercambios. Compártelo en tu grupo.",

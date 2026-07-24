@@ -1,6 +1,8 @@
 import { expect, skipWithoutLiveAuth, test } from "./support/auth";
 
-const TABS = ["/pines", "/intercambios", "/matches", "/perfil"];
+// The three tabs still awaiting their feature; Perfil is real since issue #35
+// and is asserted separately below.
+const STUB_TABS = ["/pines", "/intercambios", "/matches"];
 const TAB_BAR = { name: /Navegación|Navigation/ };
 
 /**
@@ -17,7 +19,7 @@ test.describe("the Shell", () => {
   // they don't depend on the runner's default browser locale.
   test.use({ locale: "es-DO" });
 
-  for (const path of TABS) {
+  for (const path of STUB_TABS) {
     test(`${path} renders a coming-soon stub inside the Shell`, async ({
       onboardedPage,
     }) => {
@@ -36,6 +38,26 @@ test.describe("the Shell", () => {
       await expect(onboardedPage.getByText(/Proyecto independiente/)).toBeVisible();
     });
   }
+
+  test("/perfil renders profile management inside the Shell", async ({
+    onboardedPage,
+  }) => {
+    await onboardedPage.goto("/perfil");
+
+    // Header wordmark
+    await expect(
+      onboardedPage.getByRole("link", { name: "mipin" }),
+    ).toBeVisible();
+    // The athlete's own card — the Perfil tab is a real feature now, not the stub.
+    await expect(onboardedPage.getByTestId("profile-card")).toBeVisible();
+    await expect(onboardedPage.getByText("Muy pronto")).toHaveCount(0);
+    // Same Shell frame: the four-destination tab bar and the footer.
+    const tabBar = onboardedPage.getByRole("navigation", TAB_BAR);
+    await expect(tabBar.getByRole("link")).toHaveCount(4);
+    await expect(
+      onboardedPage.getByText(/Proyecto independiente/),
+    ).toBeVisible();
+  });
 
   test("the tab bar is bottom-fixed and thumb-usable on a mobile viewport", async ({
     onboardedPage,

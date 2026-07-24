@@ -19,6 +19,8 @@ export const ONBOARDING_PROFILE_PATH = "/registro/perfil";
  */
 export const WELCOME_PATH = "/bienvenida";
 export const APP_HOME_PATH = "/pines";
+/** The Perfil tab — profile management (issue #35) and the sign-out home. */
+export const PERFIL_PATH = "/perfil";
 
 /** The OAuth/magic-link redirect target — one code-exchange handler for both. */
 export const AUTH_CALLBACK_PATH = "/auth/callback";
